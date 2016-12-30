@@ -1,0 +1,101 @@
+{
+    "#_aaaa999": {
+        "path": "/xxx/movies"
+    },
+    "3a_999": {
+        "path": "/xxx/movies"
+    },
+    "4a_999": {
+        "path": "/xxx/movies"
+    },
+    "4a_999_aaa": {
+        "path": "/xxx/movies"
+    },
+    "4a_999_aaaaaaa_aaa_aaaaaaaa": {
+        "path": "/xxx/movies"
+    },
+    "_a99a99_aaaa_aaaa_aaa": {
+        "path": "/video/tv",
+        "pattern": "{series_name}{space}s(?P<season_no>\\d\\d)e(?P<episode_no>\\d\\d){space}{video_source}{space}{video_codec}{space}{release_group}",
+        "samples": [
+            "alias s04e11 hdtv xvid-tcm",
+            "alcatraz s01e04 hdtv xvid-lol",
+            "backstrom.s01e11.hdtv.xvid-afg",
+            "bbc.warriors.s01e01.hdtv.xvid-otv",
+            "bad.education.s01e03.hdtv.xvid-afg",
+            "alcatraz s01e04 hdtv xvid-lol",
+            "boss.s01e01.hdtv.xvid-lol",
+            "big.love.s04e05.hdtv.xvid-sys",
+            "deadbeat.s01e03.hdtv.xvid-afg",
+            "auction.kings.s03e09.hdtv.xvid-afg"
+        ]
+    },
+    "_a99a99_aaaa_aaa": {
+        "path": "/video/tv",
+        "pattern": "{series_name}{space}s(?P<season_no>\\d\\d)e(?P<episode_no>\\d\\d){space}{video_codec}{space}{release_group}",
+        "samples": [
+            "aquarius.s02e05.xvid-afg",
+            "ange.vierge.s01e02.xvid-afg",
+            ".the.country.s14e19.xvid-afg"
+        ]
+    },
+    "_a99a99_999a_a999_aaa": {
+        "path": "/video/tv",
+        "pattern": "{series_name}{space}s(?P<season_no>\\d\\d)e(?P<episode_no>\\d\\d){space}{video_resolution}{space}{video_codec}{space}{release_group}",
+        "samples": [
+            "aquarius.s02e11.480p.x264-msd",
+            "amanchu.s01e03.480p.x264-msd",
+            "airmageddon.s01e03.480p.x264-msd"
+        ]
+    },
+    "_a99a99_999a_aaaa_a999_aaa": {
+        "path": "/video/tv",
+        "pattern": "{series_name}{space}s(?P<season_no>\\d\\d)e(?P<episode_no>\\d\\d){space}{video_resolution}{space}{video_source}{space}{video_codec}{space}{release_group}",
+        "samples": [
+            "amber s01e01 480p hdtv x264-msd",
+            "youngers.s01e05.480p.hdtv.x264-msd",
+            "casualty s29e02 720p hdtv x264-tla",
+            "big.lake.s01e05.720p.hdtv.x264-ctu",
+            "army.wives.s04e02.720p.hdtv.x264-red"
+        ]
+    },
+    "_a99a99_aaaa_a999_aaa[aaaa]": {
+        "path": "/video/tv",
+        "pattern": "{series_name}{space}s(?P<season_no>\\d\\d)e(?P<episode_no>\\d\\d){space}{video_source}{space}{video_codec}{space}{release_group}",
+        "samples": [
+            "clipped.s01e09.hdtv.x264-lol[ettv]",
+            "alcatraz s01e08 hdtv x264-lol[ettv]"
+        ]
+    },
+    "_a99a99_aaaa_a999_aaa[aaaaa]": {
+        "path": "/video/tv",
+        "pattern": "{series_name}{space}s(?P<season_no>\\d\\d)e(?P<episode_no>\\d\\d){space}{video_source}{space}{video_codec}{space}{release_group}(?:.+)",
+        "samples": [
+            "amber.s01e02.hdtv.x264-tla[rartv]",
+            "crisis.s01e02.hdtv.x264-lol[rartv]",
+            "betrayal.s01e12.hdtv.x264-lol[rartv]",
+            "bad.education.s03e01.hdtv.x264-tla[rartv]",
+            "the good wife s05e21 hdtv x264-lol[rarbg]",
+            "pretty.little.liars.s07e06.hdtv.x264-lol[prime]",
+            "masterchef australia s08e19 hdtv x264-fqm[rarbg]"
+        ]
+    },
+    "_a99a99_aaaa_aaaa_aaa[aaaa]": {
+        "path": "/video/tv",
+        "pattern": "{series_name}{space}s(?P<season_no>\\d\\d)e(?P<episode_no>\\d\\d){space}{video_source}{space}{video_codec}{space}{release_group}",
+        "samples": [
+            "arrow s01e01 hdtv xvid-afg[ettv]",
+            "alcatraz s01e03 hdtv xvid-lol[ettv]",
+            "archer 2009 s04e02 hdtv xvid-afg[ettv]",
+            "the americans s01e01 hdtv xvid-sam[ettv]"
+        ]
+    },
+    "_a99a99_aaaa_aaaaaaaaaaa_aaa_aa_aaa": {
+        "path": "/video/tv",
+        "pattern": "{series_name}{space}s(?P<season_no>\\d\\d)e(?P<episode_no>\\d\\d){space}{video_source}{space}subtitulad[o|a]{space}esp{space}sc.avi",
+        "samples": [
+            "amber.s01e01.hdtv.subtitulado.esp.sc.avi",
+            "call.the.midwife.s01e04.hdtv.subtitulado.esp.sc.avi"
+        ]
+    }
+}
