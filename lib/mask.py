@@ -164,8 +164,18 @@ class MaskParser(object):
                 self._handle_match(data)
                 return data.groupdict()
 
+    def update_stats(self):
+        """ Save features statistics """
+        for name in ("audio_codecs", "audio_channels", "video_codecs",
+                     "video_sources", "video_resolutions", "release_props",
+                     "release_groups"):
+            file_path = "settings/{name}.json".format(name=name)
+            assert os.path.exists(file_path)
+            with open(file_path, "w+") as f:
+                json.dump(getattr(self, name), f, indent=4, sort_keys=True)
+
     def _handle_match(self, match):
-        """ Update usage statistics """
+        """ Update features statistics """
         for key, value in match.groupdict().items():
             attr = getattr(self, key, None)
             if attr and value in attr:
@@ -184,4 +194,3 @@ class MaskParser(object):
                 print("Unable to parse {file_path}: bad json".format(
                       file_path=file_path))
                 exit(-1)
-

@@ -124,6 +124,9 @@ def main():
                 if not attr.startswith("_"):
                     print(attr, getattr(parser, attr))
 
+        if args.train_mode:
+            parser.update_stats()
+
     except KeyboardInterrupt:
         logger.error("KeyboardInterrupt")
     finally:
