@@ -1,136 +1,235 @@
 {
-    "dutchreleaseteam": {},
+    "0x539": {},
     "420ripz": {},
-    "7sins": {},
-    "8ballrips": {},
-    "aaa": {},
-    "aaf": {},
+    "7sins": {
+        "freq": 18
+    },
+    "8ballrips": {
+        "freq": 3
+    },
+    "aaa": {
+        "freq": 9
+    },
+    "aaf": {
+        "freq": 7280
+    },
     "abd": {},
     "adhd": {},
     "aen": {},
     "aeroholics": {},
-    "afg": {},
-    "afo": {},
+    "afg": {
+        "freq": 174240
+    },
+    "afo": {
+        "freq": 24
+    },
     "aggr0": {},
     "aihd": {},
     "alliance": {},
     "amiable": {},
-    "an0nym0us": {},
-    "anihls": {},
+    "an0nym0us": {
+        "freq": 255
+    },
+    "anihls": {
+        "freq": 3487
+    },
     "apl": {},
-    "arc": {},
+    "arc": {
+        "freq": 198
+    },
     "arigold": {},
     "arrow": {},
     "arthouse": {},
-    "avchd": {},
+    "avchd": {
+        "freq": 39
+    },
     "avs720": {},
     "axxo": {},
     "band1d0s": {},
     "belial": {},
     "bestdivx": {},
-    "besthd": {},
-    "bff": {},
-    "bia": {},
-    "biq": {},
+    "besthd": {
+        "freq": 9
+    },
+    "bff": {
+        "freq": 259
+    },
+    "bia": {
+        "freq": 5871
+    },
+    "biq": {
+        "freq": 21
+    },
     "blow": {},
     "brmp": {},
     "cbgb": {},
-    "ccat": {},
+    "ccat": {
+        "freq": 3
+    },
     "cddhd": {},
     "cfh": {},
-    "chd": {},
-    "ctu": {},
-    "cinefile": {},
+    "chd": {
+        "freq": 6
+    },
+    "cinefile": {
+        "freq": 3
+    },
     "cocain": {},
-    "condition": {},
-    "counterfeit": {},
+    "condition": {
+        "freq": 3
+    },
+    "counterfeit": {
+        "freq": 75
+    },
     "cowry": {},
     "crisc": {},
+    "crooks": {
+        "freq": 4337
+    },
     "crossbow": {},
-    "ctrlhd": {},
-    "crooks": {},
+    "ctrlhd": {
+        "freq": 6
+    },
+    "ctu": {
+        "freq": 7362
+    },
     "cultxvid": {},
     "cybermen": {},
     "d-z0n3": {},
     "d3si": {},
-    "daa": {},
+    "daa": {
+        "freq": 132
+    },
     "de(42)": {},
     "debtxvid": {},
     "decibel": {},
     "definite": {},
     "deity": {},
-    "dem": {},
+    "dem": {
+        "freq": 1221
+    },
     "demented": {},
     "depravity": {},
     "deprived": {},
-    "deranged": {},
+    "deranged": {
+        "freq": 9
+    },
     "devise": {},
     "diamond": {},
-    "dimension": {},
+    "dimension": {
+        "freq": 72354
+    },
     "dioxide": {},
     "dirty": {},
-    "document": {},
+    "document": {
+        "freq": 99
+    },
     "domino": {},
-    "don": {},
+    "don": {
+        "freq": 45
+    },
     "done": {},
-    "dot": {},
+    "dot": {
+        "freq": 1534
+    },
+    "dutchreleaseteam": {
+        "freq": 267
+    },
     "dvf": {},
     "dvl": {},
-    "dvsky": {},
-    "ea": {},
+    "dvsky": {
+        "freq": 423
+    },
+    "ea": {
+        "freq": 2
+    },
     "ebp": {},
-    "eci": {},
+    "eci": {
+        "freq": 3
+    },
     "effect": {},
     "episode": {},
     "erodeluxe": {},
     "esir": {},
     "espise": {},
     "ethos": {},
-    "ettv": {},
+    "ettv": {
+        "freq": 6
+    },
     "eureka": {},
-    "evo": {},
+    "evo": {
+        "freq": 25948
+    },
     "evolve": {},
     "ewdp": {},
     "exile": {},
     "extacy": {},
-    "exvid": {},
+    "exvid": {
+        "freq": 339
+    },
     "exvidint": {},
-    "failed": {},
+    "failed": {
+        "freq": 1784
+    },
     "felony": {},
-    "ffm": {},
+    "ffm": {
+        "freq": 3
+    },
     "fico": {},
     "fihvid": {},
-    "filmhd": {},
-    "finale": {},
+    "filmhd": {
+        "freq": 250
+    },
+    "finale": {
+        "freq": 21
+    },
     "flair": {},
     "flaite": {},
     "flawl3ss": {},
-    "form": {},
-    "fqm": {},
+    "form": {
+        "freq": 6
+    },
+    "fqm": {
+        "freq": 9290
+    },
     "fragment": {},
     "framestor": {},
     "fsihd": {},
-    "ftp": {},
+    "ftp": {
+        "freq": 12265
+    },
     "ftw-hd": {},
     "fty": {},
-    "fum": {},
-    "fzhd": {},
+    "fum": {
+        "freq": 63486
+    },
+    "fzhd": {
+        "freq": 6
+    },
     "galt": {},
-    "geckos": {},
+    "geckos": {
+        "freq": 78
+    },
     "gimchi": {},
     "gxp": {},
     "gzp": {},
     "h264irmu": {},
     "h@m": {},
     "hab": {},
-    "haggis": {},
+    "haggis": {
+        "freq": 201
+    },
     "haideaf": {},
-    "halcyon": {},
+    "halcyon": {
+        "freq": 3
+    },
     "handjob": {},
     "hangover": {},
     "hca": {},
     "hd4u": {},
-    "hdc": {},
+    "hdc": {
+        "freq": 141
+    },
     "hdclassics": {},
     "hdclub": {},
     "hddevils": {},
@@ -141,64 +240,108 @@
     "hidt": {},
     "hls": {},
     "hubris": {},
-    "hv": {},
+    "hv": {
+        "freq": 132
+    },
     "ibex": {},
     "ifpd": {},
-    "ift": {},
+    "ift": {
+        "freq": 336
+    },
     "ignition": {},
     "iguana": {},
-    "iht": {},
+    "iht": {
+        "freq": 361
+    },
     "ika": {},
     "ilg": {},
-    "ill": {},
+    "ill": {
+        "freq": 6
+    },
     "illusion": {},
     "ils": {},
     "imbt": {},
-    "immortals": {},
+    "immerse": {
+        "freq": 11614
+    },
+    "immortals": {
+        "freq": 18
+    },
     "incite": {},
-    "ind": {},
+    "ind": {
+        "freq": 48
+    },
     "infamous": {},
     "injection": {},
     "intimid": {},
     "invandraren": {},
     "itch": {},
-    "japhson": {},
+    "japhson": {
+        "freq": 57
+    },
     "jetset": {},
     "jollyroger": {},
-    "kafferep": {},
+    "kafferep": {
+        "freq": 18
+    },
     "kaka": {},
     "kebap": {},
-    "killers": {},
+    "killers": {
+        "freq": 74224
+    },
     "kingben": {},
     "kinobox": {},
     "klaxxon": {},
-    "kwz": {},
-    "kyr": {},
+    "kwz": {
+        "freq": 18
+    },
+    "kyr": {
+        "freq": 1754
+    },
     "lap": {},
     "larceny": {},
     "lchd": {},
     "leverage": {},
     "line": {},
-    "lividity": {},
-    "lol": {},
+    "lividity": {
+        "freq": 15
+    },
+    "lol": {
+        "freq": 201727
+    },
     "loung3d": {},
     "lpd": {},
     "ltrg": {},
-    "ltu": {},
+    "ltu": {
+        "freq": 12
+    },
     "margin": {},
     "maxhd": {},
     "mchd": {},
     "mcr": {},
+    "megusta": {
+        "freq": 21147
+    },
     "melite": {},
     "meth": {},
     "metis": {},
-    "mhd": {},
+    "mhd": {
+        "freq": 6
+    },
     "mhq": {},
-    "moh": {},
-    "momentum": {},
+    "moh": {
+        "freq": 6
+    },
+    "momentum": {
+        "freq": 4945
+    },
     "moovee": {},
-    "mrx": {},
-    "msd": {},
+    "mrx": {
+        "freq": 33
+    },
+    "msd": {
+        "freq": 158764
+    },
     "multiply": {},
     "mysilu": {},
     "ndn": {},
@@ -208,72 +351,114 @@
     "ngb": {},
     "nhanc3": {},
     "nile": {},
-    "nodlabs": {},
+    "nodlabs": {
+        "freq": 330
+    },
     "nordichd": {},
     "noscreens": {},
-    "nox": {},
-    "ntv": {},
+    "nox": {
+        "freq": 24
+    },
+    "ntv": {
+        "freq": 3
+    },
     "obsidion": {},
     "oem1080": {},
-    "otv": {},
     "osiris": {},
+    "otv": {
+        "freq": 462
+    },
     "ouzo": {},
     "parasite": {},
     "particle": {},
     "perfectionhd": {},
-    "pfa": {},
+    "pfa": {
+        "freq": 144
+    },
     "phobos": {},
     "postx": {},
     "prime": {},
     "prodji": {},
     "progress": {},
-    "psychd": {},
+    "psychd": {
+        "freq": 123
+    },
+    "publichd": {},
     "pukka": {},
-    "qcf": {},
-    "rartv": {},
-    "rarbg": {},
-    "rawnitro": {},
+    "qcf": {
+        "freq": 1985
+    },
+    "rarbg": {
+        "freq": 2311
+    },
+    "rartv": {
+        "freq": 6
+    },
+    "rawnitro": {
+        "freq": 36
+    },
     "rcdivx": {},
     "reactor": {},
-    "red": {},
+    "red": {
+        "freq": 348
+    },
     "redblade": {},
     "refined": {},
     "reveille": {},
-    "ritalin": {},
+    "ritalin": {
+        "freq": 12
+    },
     "ritalix": {},
     "roundrobin": {},
-    "rovers": {},
+    "rovers": {
+        "freq": 411
+    },
     "ruby": {},
     "rude": {},
     "rusted": {},
     "saimorny": {},
-    "santi": {},
-    "sam": {},
+    "sam": {
+        "freq": 1724
+    },
+    "santi": {
+        "freq": 9
+    },
     "saphire": {},
     "scared": {},
-    "publichd": {},
-    "immerse": {},
-    "megusta": {},
     "scream": {},
     "sector7": {},
     "semtex": {},
     "septic": {},
-    "ser": {},
-    "sinners": {},
+    "ser": {
+        "freq": 891
+    },
+    "sinners": {
+        "freq": 57
+    },
     "skitfiske": {},
     "sml": {},
     "smokey": {},
     "sonido": {},
     "sparks": {},
-    "splitsville": {},
-    "sprinter": {},
+    "splitsville": {
+        "freq": 66
+    },
+    "sprinter": {
+        "freq": 369
+    },
     "sunspot": {},
     "svinto": {},
     "swaggerhd": {},
-    "sys": {},
+    "sys": {
+        "freq": 7427
+    },
     "target": {},
-    "taste": {},
-    "tcm": {},
+    "taste": {
+        "freq": 4480
+    },
+    "tcm": {
+        "freq": 363
+    },
     "tdf": {},
     "tdm": {},
     "thora": {},
@@ -281,10 +466,14 @@
     "tide": {},
     "timelords": {},
     "titans": {},
-    "tla": {},
+    "tla": {
+        "freq": 18872
+    },
     "tlf": {},
     "trojan": {},
-    "trv": {},
+    "trv": {
+        "freq": 3
+    },
     "tusahd": {},
     "twist": {},
     "twizted": {},
@@ -293,8 +482,12 @@
     "ulla": {},
     "undead": {},
     "unit": {},
-    "untouchables": {},
-    "unveil": {},
+    "untouchables": {
+        "freq": 3
+    },
+    "unveil": {
+        "freq": 30
+    },
     "usi": {},
     "utl": {},
     "vamps": {},
@@ -302,26 +495,45 @@
     "vedett": {},
     "veto": {},
     "vh-prod": {},
-    "vision": {},
-    "vista™": {},
-    "vomit": {},
-    "w4f": {},
-    "walmart": {},
-    "waste": {},
+    "vision": {
+        "freq": 6
+    },
+    "vista\u2122": {},
+    "vomit": {
+        "freq": 66
+    },
+    "w4f": {
+        "freq": 19039
+    },
+    "walmart": {
+        "freq": 991
+    },
+    "waste": {
+        "freq": 9
+    },
     "whiizz": {},
     "whiskey": {},
-    "wide": {},
-    "wiki": {},
+    "wide": {
+        "freq": 39
+    },
+    "wiki": {
+        "freq": 3
+    },
     "wlm": {},
-    "wpi": {},
+    "wpi": {
+        "freq": 447
+    },
     "wrd": {},
-    "wsp®": {},
+    "wsp\u00ae": {},
     "xander": {},
     "xcz": {},
-    "xii": {},
-    "xor": {},
+    "xii": {
+        "freq": 2398
+    },
+    "xor": {
+        "freq": 5703
+    },
     "xpress": {},
     "xstreem": {},
-    "xtsf": {},
-    "0x539": {}
+    "xtsf": {}
 }

@@ -2,7 +2,20 @@
 import os
 import re
 import json
-import functools
+import collections
+
+from functools import lru_cache
+
+def jsonify(obj):
+    if isinstance(obj, (set,)):
+        return list(sorted(obj))
+    if isinstance(obj, (collections.Counter,)):
+        return sorted(
+            {mask: count for mask, count in obj.items() if count > 1}.items(),
+            key=lambda x: x[1],
+            reverse=True
+        )
+    return obj
 
 
 class MaskParser(object):
@@ -34,6 +47,9 @@ class MaskParser(object):
 
                  train_mode=None
                  ):
+
+        self.torrents_masks = dict()
+
         self._ch_punkt = chars_punkt or ":,!?"
         self._ch_spaces = chars_spaces or ".+-~_–\/=| "
         self._ch_blacklist = chars_blacklist or '*"\''
@@ -41,7 +57,7 @@ class MaskParser(object):
 
         self._train_mode = train_mode
 
-        self._matchers = list()
+        self._matchers = dict()
         self._mask_matchers = dict()
 
         self._trans_table = str.maketrans(
@@ -64,19 +80,10 @@ class MaskParser(object):
 
     def create_regexps(self, **extra):
         """ Create regular expressions """
+        def _enum(name):
+            return self._create_re_group(name[:-1], getattr(self, name))
 
-        def _enum_group(name):
-            """ Create regular expression """
-            return "(?P<{name}>{choices})".format(
-                name=name,
-                choices="|".join(
-                    sorted(set(re.escape(x.lower())
-                               for x in getattr(self, name)))
-                )
-            )
-
-        pattern_vars = {
-            **dict(
+        _vars = dict(
                 year="(?P<year>19\d\d|20\d\d)",
                 space="(?:[\s]?)",
                 series_name="(?P<series_name>[\w\d\s]*?[\w\d])",
@@ -84,26 +91,24 @@ class MaskParser(object):
                 season_no="(?P<season_no>\d{1,2})",
                 episode_no="(?P<episode_no>\d{1,2})",
 
-                audio_codec=_enum_group("audio_codecs"),
-                audio_channel=_enum_group("audio_channels"),
-                video_codec=_enum_group("video_codecs"),
-                video_source=_enum_group("video_sources"),
-                video_resolution=_enum_group("video_resolutions"),
+                audio_codec=_enum("audio_codecs"),
+                audio_channel=_enum("audio_channels"),
+                video_codec=_enum("video_codecs"),
+                video_source=_enum("video_sources"),
+                video_resolution=_enum("video_resolutions"),
 
-                release_group=_enum_group("release_groups"),
-            ),
-            **extra
-        }
+                release_group=_enum("release_groups"),
+        )
+        _vars.update(extra)
 
-        for options in self.torrents_masks.values():
+        for m_id, options in self.torrents_masks.items():
             try:
                 samples = options["samples"]
                 template = options["pattern"]
             except KeyError:
                 continue
 
-            pattern = template.format(*("{%d}" for d in range(0, 10)),
-                                      **pattern_vars)
+            pattern = template.format(**_vars)
 
             try:
                 matcher = re.compile(pattern)
@@ -121,14 +126,20 @@ class MaskParser(object):
                           matcher.pattern, " -> ",
                           matcher.search(sample_clean))
                     raise
-            self._matchers.append(matcher)
+            self._matchers[matcher] = m_id
+            for mask in options.get("masks") or ():
+                try:
+                    self._mask_matchers[mask]
+                except KeyError:
+                    self._mask_matchers[mask] = []
+                self._mask_matchers[mask].append(matcher)
 
-    @functools.lru_cache(maxsize=2048)
+    @lru_cache()
     def mask_title(self, title):
         """ Create mask from title """
         return self.clean_title(title).translate(self._trans_table)
 
-    @functools.lru_cache(maxsize=2048)
+    @lru_cache()
     def clean_title(self, title):
         """ Make title clean """
         return " ".join(
@@ -142,44 +153,18 @@ class MaskParser(object):
             ) if c0
         )
 
-    @functools.lru_cache(maxsize=2048)
+    @lru_cache()
     def parse_title(self, title):
         """ Parse title """
         t_mask = self.mask_title(title)
-        t_clean = self.clean_title(title)
-
         if t_mask not in self._mask_matchers:
-            self._mask_matchers[t_mask] = list()
+            return None
 
-            for matcher in self._matchers:
-                data = matcher.search(t_clean)
-                if data:
-                    self._mask_matchers[t_mask].append(matcher)
-                    self._handle_match(data)
-                    return data.groupdict()
-
+        t_clean = self.clean_title(title)
         for matcher in self._mask_matchers[t_mask]:
             data = matcher.search(t_clean)
             if data:
-                self._handle_match(data)
                 return data.groupdict()
-
-    def update_stats(self):
-        """ Save features statistics """
-        for name in ("audio_codecs", "audio_channels", "video_codecs",
-                     "video_sources", "video_resolutions", "release_props",
-                     "release_groups"):
-            file_path = "settings/{name}.json".format(name=name)
-            assert os.path.exists(file_path)
-            with open(file_path, "w+") as f:
-                json.dump(getattr(self, name), f, indent=4, sort_keys=True)
-
-    def _handle_match(self, match):
-        """ Update features statistics """
-        for key, value in match.groupdict().items():
-            attr = getattr(self, key, None)
-            if attr and value in attr:
-                attr[value]["freq"] = (attr[value].get("freq") or 0) + 1
 
     def _read_values(self, name):
         """ Read settings into object properties """
@@ -194,3 +179,122 @@ class MaskParser(object):
                 print("Unable to parse {file_path}: bad json".format(
                       file_path=file_path))
                 exit(-1)
+
+    def _create_re_group(self, name, values):
+        """ Create regular expression """
+        print({
+            value: info
+            for value, info in
+            sorted(values.items(),
+                   key=lambda x: x[1].get("freq") or 0,
+                     reverse=True)
+            if (info.get("freq") or 0) > 0
+        })
+        return "(?P<{name}>{choices})".format(
+            name=name,
+            choices="|".join(
+                re.escape(value.lower()) for value, info in
+                sorted(
+                    values.items(),
+                    key=lambda x: x[1].get("freq") or 0, reverse=True
+                )
+                if (info.get("freq") or 0) > 0
+            )
+        )
+
+
+class MaskTrainParser(MaskParser):
+    __slots__ = MaskParser.__slots__
+
+    def create_regexps(self, **extra):
+        """ Create matcher objects """
+        super().create_regexps(**extra)
+
+        for m_id in self.torrents_masks:
+            self.torrents_masks[m_id].update({
+                "freq": 0, "masks": collections.Counter()})
+
+    @lru_cache()
+    def parse_title(self, title):
+        """ Parse title """
+        t_mask = self.mask_title(title)
+        t_clean = self.clean_title(title)
+
+        candidates = []
+        if t_mask not in self._mask_matchers:
+            self._mask_matchers[t_mask] = []
+
+            for matcher, m_id in self._matchers.items():
+                data = matcher.search(t_clean)
+                if data:
+                    self._mask_matchers[t_mask].append(matcher)
+                    self._handle_match(data)
+                    self.torrents_masks[m_id]["freq"] += 1
+                    self.torrents_masks[m_id]["masks"][t_mask] += 1
+                    candidates.append(data.groupdict())
+        else:
+            for matcher in self._mask_matchers[t_mask]:
+                data = matcher.search(t_clean)
+                if data:
+                    m_id = self._matchers[matcher]
+                    self._handle_match(data)
+                    self.torrents_masks[m_id]["freq"] += 1
+                    self.torrents_masks[m_id]["masks"][t_mask] += 1
+                    candidates.append(data.groupdict())
+
+        if candidates:
+            # Todo: return best result, not first
+            return candidates[0]
+
+    def update_stats(self):
+        """ Save features and masks statistics """
+        for name in ("audio_codecs", "audio_channels", "video_codecs",
+                     "video_sources", "video_resolutions", "release_props",
+                     "release_groups"):
+            file_path = "settings/{name}.json".format(name=name)
+            assert os.path.exists(file_path)
+
+            with open(file_path, "w+") as f:
+                json.dump(getattr(self, name), f, indent=4, sort_keys=True)
+
+        def clean_options(options):
+            if not options.get("masks"):
+                return options
+            options["masks"] = collections.OrderedDict(
+                sorted(
+                    (
+                        (mask, count)
+                        for mask, count in options["masks"].items()
+                        if count > 1
+                    ),
+                    key=lambda x: x[1],
+                    reverse=True
+                )
+            )
+            return options
+
+        with open("settings/torrents_masks.json", "w+") as f:
+            json.dump(
+                {k: clean_options(v) for k, v in self.torrents_masks.items()},
+                f,
+                default=jsonify,
+                indent=4
+            )
+
+    def _handle_match(self, match):
+        """ Update features statistics """
+        for key, value in match.groupdict().items():
+            attr = getattr(self, key, None)
+            if attr and value in attr:
+                attr[value]["freq"] = (attr[value].get("freq") or 0) + 1
+
+    def _create_re_group(self, name, values):
+        """ Create regular expression """
+        return "(?P<{name}>{choices})".format(
+            name=name,
+            choices="|".join(
+                sorted(
+                    set(re.escape(x.lower()) for x in values)
+                )
+            )
+        )
