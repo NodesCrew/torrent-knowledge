@@ -24,14 +24,16 @@ user@mbpro$ wc -l datasets/torrents_titles.csv
 
 user@mbpro$ ./main.py -vvv -t
  ...
+[log] root - DEBUG - Read Lines per second: 6664.7008
+[log] root - DEBUG - Complete in 2032.46
 
 user@mbpro$ wc -l /tmp/torrents.json
   165976 /tmp/torrents.json
 
 user@mbpro$ ./main.py -vvv
 ...
-[log] root - DEBUG - Read Lines per second: 41899.2952
-[log] root - DEBUG - Complete in 314.00
+[log] root - DEBUG - Read Lines per second: 46981.7985
+[log] root - DEBUG - Complete in 288.36
 
 user@mbpro$ wc -l /tmp/torrents.json
   161551 /tmp/torrents.json

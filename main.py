@@ -30,34 +30,31 @@ def test_parser(parser):
         logger.debug("Test mask_title: '%s' -> '%s'", test, expect)
 
 
-def read_imdb_tv_shows(parser):
-    tv_shows = dict()
-    csv_path = "datasets/imdb_tv_shows.csv"
-    logger.debug("Read IMDB TVShows dataset: %s", csv_path)
+def read_imdb_tv_series(parser):
+    tv_series = dict()
+    csv_path = "datasets/imdb_tv_series.csv"
+    logger.debug("TVSeries dataset path: %s", csv_path)
 
     with open(csv_path) as csv_file:
-        reader = csv.reader(csv_file)
+        reader = csv.reader(csv_file, delimiter="|")
+        next(reader)
         for imdb_id, title in reader:
             title_clean = parser.clean_title(title)
-            tv_shows[title_clean] = imdb_id
+            tv_series[title_clean] = imdb_id
 
-    logger.debug("Total IMDB TVShows dataset size: %s", len(tv_shows))
-    return tv_shows
+    logger.debug("TVSeries dataset size: %s", len(tv_series))
+    return tv_series
 
 
 def read_imdb_tv_episodes(parser):
     tv_episodes = dict()
     csv_path = "datasets/imdb_tv_episodes.csv"
-    logger.debug("Read IMDB TVEpisodes dataset: %s", csv_path)
+    logger.debug("TVEpisodes dataset path: %s", csv_path)
 
     with open(csv_path) as csv_file:
-        for line in csv_file:
-            try:
-                imdb_id, series_id, season_no, episode_no, title = line.strip().split(",", 4)
-                title = title.strip('"\'')
-            except:
-                raise
-
+        reader = csv.reader(csv_file, delimiter="|")
+        next(reader)
+        for imdb_id, series_id, season_no, episode_no, title in reader:
             pseudo_id = EPISODE_PSEUDO_ID.format(
                 series_id=series_id,
                 season_no=int(season_no),
@@ -65,13 +62,13 @@ def read_imdb_tv_episodes(parser):
             )
             tv_episodes[pseudo_id] = imdb_id
 
-    logger.debug("Total IMDB TVEpisodes dataset size: %s", len(tv_episodes))
+    logger.debug("TVEpisodes dataset size: %s", len(tv_episodes))
     return tv_episodes
 
 
-def parse_torrents(parser, tv_shows, tv_episodes):
+def parse_torrents(parser, tv_series, tv_episodes):
     t0 = time.time()
-    csv_path = "datasets/torrents_titles.csv"
+    csv_path = "datasets/torrents.csv"
     logger.debug("Read and parse torrents dataset: %s", csv_path)
 
     total = 0
@@ -82,7 +79,8 @@ def parse_torrents(parser, tv_shows, tv_episodes):
     success_ids = set()
 
     with open(csv_path) as csv_file:
-        reader = csv.reader(csv_file)
+        reader = csv.reader(csv_file, delimiter="|")
+        next(reader)
         for line in reader:
             total += 1
             if not total % 5000:
@@ -110,13 +108,14 @@ def parse_torrents(parser, tv_shows, tv_episodes):
                 torrent = parser.parse_title(torrent_title)
 
                 assert torrent
-                if torrent["series_name"] not in tv_shows:
+                assert "series_name" in torrent
+                if torrent["series_name"] not in tv_series:
                     tv404 += 1
                     continue
                 tv200 += 1
 
                 series_name = torrent.pop("series_name")
-                series_id = tv_shows[series_name]
+                series_id = tv_series[series_name]
                 pseudo_id = EPISODE_PSEUDO_ID.format(
                     series_id=series_id,
                     season_no=int(torrent["season_no"]),
@@ -141,7 +140,7 @@ def parse_torrents(parser, tv_shows, tv_episodes):
     logger.debug("Read Lines per second: %0.4f", total / (time.time() - t0))
 
 
-def read_known_tv_shows_cache(path):
+def read_known_tv_series_cache(path):
     with open(path) as f:
         for line in f:
             torrent = ""
@@ -174,23 +173,23 @@ def main():
         logger.debug("Test parser via test/*.json")
         test_parser(parser)
 
-        tv_shows = read_imdb_tv_shows(parser)
+        tv_series = read_imdb_tv_series(parser)
         tv_episodes = read_imdb_tv_episodes(parser)
-        found_tv_shows = 0
+        found_tv_series = 0
 
         cache_path = "/tmp/torrents.json"
         if not os.path.exists(cache_path):
             t0 = time.time()
             with open(cache_path, "w+") as f:
-                for torrent in parse_torrents(parser, tv_shows, tv_episodes):
+                for torrent in parse_torrents(parser, tv_series, tv_episodes):
                     f.write("{}\n".format(json.dumps(torrent)))
-                    found_tv_shows += 1
+                    found_tv_series += 1
 
-                    if not found_tv_shows % 1000:
+                    if not found_tv_series % 1000:
                         logger.debug("TVSeries torrents found: %s",
-                                     found_tv_shows)
+                                     found_tv_series)
 
-                        # if not found_tv_shows % 1000:
+                        # if not found_tv_series % 1000:
                         #    break
             logger.debug("Complete in %0.2f", time.time() - t0)
 
