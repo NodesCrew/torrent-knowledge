@@ -6,6 +6,7 @@ import csv
 import sys
 import time
 import json
+import datetime
 import collections
 from lib.log import logger
 from lib.cli import parse_args
@@ -35,15 +36,15 @@ def test_parser(parser):
 
 def read_imdb_tv_series(parser):
     tv_series = dict()
-    csv_path = "datasets/imdb_tv_series.csv"
-    logger.debug("TVSeries dataset path: %s", csv_path)
-
-    with open(csv_path) as csv_file:
-        reader = csv.reader(csv_file, delimiter="|")
-        next(reader)
-        for imdb_id, title in reader:
-            title_clean = parser.clean_title(title)
-            tv_series[title_clean] = imdb_id
+    for file_name in ["imdb_tv_series.csv", "imdb_tv_series_extra.csv"]:
+        csv_path = "datasets/%s" % file_name
+        logger.debug("TVSeries dataset path: %s", csv_path)
+        with open(csv_path) as csv_file:
+            reader = csv.reader(csv_file, delimiter="|")
+            next(reader)
+            for imdb_id, title in reader:
+                title_clean = parser.clean_title(title)
+                tv_series[title_clean] = imdb_id
 
     logger.debug("TVSeries dataset size: %s", len(tv_series))
     return tv_series
@@ -69,85 +70,135 @@ def read_imdb_tv_episodes(parser):
     return tv_episodes
 
 
-def parse_torrents(parser, tv_series, tv_episodes):
+def parse_torrents(args, parser, tv_series, tv_episodes):
+
+    def handle_tv_episode(_torrent):
+        try:
+            _torrent["season_no"] = int(_torrent["season_no"])
+            _torrent["episode_no"] = int(_torrent["episode_no"])
+
+            _pseudo_id = EPISODE_PSEUDO_ID.format(
+                series_id=_torrent["series_id"],
+                season_no=_torrent["season_no"],
+                episode_no=_torrent["episode_no"]
+            )
+        except KeyError:
+            return _torrent
+
+        if _pseudo_id in tv_episodes:
+            _torrent["imdb_id"] = tv_episodes[_pseudo_id]
+            ep200[_pseudo_id] += 1
+        else:
+            ep404[_pseudo_id] += 1
+
+        return _torrent
+
+    def handle_tv_series(_torrent):
+        _series_name = _torrent.pop("series_name")
+        if _series_name not in tv_series:
+            tv404[_series_name] += 1
+            return _torrent
+
+        _series_id = tv_series[_series_name]
+        _torrent["series_id"] = _series_id
+        tv200[_series_id] += 1
+
+        _torrent = handle_tv_episode(_torrent)
+        return _torrent
+
     t0 = time.time()
-    csv_path = "datasets/torrents.csv"
-    logger.debug("Read and parse torrents dataset: %s", csv_path)
+    logger.debug("Read and parse torrents dataset: %s", args.input_file.name)
 
     total = 0
-    tv200 = 0
+    tv200 = collections.Counter()
     tv404 = collections.Counter()
-    ep200 = 0
+    ep200 = collections.Counter()
     ep404 = collections.Counter()
     success_ids = set()
 
-    with open(csv_path) as csv_file:
-        reader = csv.reader(csv_file, delimiter="|")
-        next(reader)
+    reader = csv.reader(args.input_file, delimiter="|")
 
-        for line in reader:
-            total += 1
-            if not total % 5000:
-                logger.debug(
-                    "Read Lines per second: %d, "
-                    "tv200: %05d, tv404: %05d, "
-                    "ep200: %05d, ep404: %05d",
-                    total / (time.time() - t0), tv200, len(tv404), ep200, len(ep404))
+    for line in reader:
+        total += 1
+        if not total % 20000:
+            logger.debug(
+                "Complete: %8d, "
+                "lines/sec: %5d, "
+                "tv200: %05d, tv404: %05d, "
+                "ep200: %05d, ep404: %05d",
+                total,
+                int(total / (time.time() - t0)),
+                len(tv200),
+                len(tv404),
+                len(ep200),
+                len(ep404)
+            )
+            # if not total % 100000:
+            #     break
 
-            try:
-                torrent_id, torrent_title = line
-                torrent_id = torrent_id.upper()
-            except ValueError:
-                continue
+        try:
+            torrent_id, torrent_title = line
+            assert len(torrent_id) == 40
+            assert 3 < len(torrent_title) < 128
+            torrent_id = torrent_id.upper()
+            assert all(ch in "01234567890ABCDEF" for ch in torrent_id)
+            assert torrent_id not in success_ids
+        except (AssertionError, ValueError):
+            continue
 
-            if torrent_id in success_ids:
-                # Do not parse another title for success parsed torrents
-                continue
+        try:
+            torrent = parser.parse_title(torrent_title)
+            assert torrent
 
-            if len(torrent_title) > 128:
-                continue
+            torrent["torrent_id"] = torrent_id
 
-            total += 1
-            try:
-                torrent = parser.parse_title(torrent_title)
-
-                assert torrent
-                assert "series_name" in torrent
-                if torrent["series_name"] not in tv_series:
-                    tv404[torrent["series_name"]] += 1
-                    continue
-                tv200 += 1
-
-                series_name = torrent.pop("series_name")
-                series_id = tv_series[series_name]
-                pseudo_id = EPISODE_PSEUDO_ID.format(
-                    series_id=series_id,
-                    season_no=int(torrent["season_no"]),
-                    episode_no=int(torrent["episode_no"])
-                )
-
-                if pseudo_id not in tv_episodes:
-                    ep404[pseudo_id] += 1
-                    continue
-                ep200 += 1
-
+            if "series_name" in torrent:
+                torrent = handle_tv_series(torrent)
                 success_ids.add(torrent_id)
-                torrent.update({
-                    "imdb_id": tv_episodes[pseudo_id],
-                    "series_id": series_id,
-                    "torrent_id": torrent_id,
-                })
-                yield torrent
-            except AssertionError:
-                pass
 
-    logger.debug("Read Lines per second: %0.4f", total / (time.time() - t0))
+            yield torrent
+        except AssertionError:
+            pass
 
+    logger.debug(
+        "Complete: %8d, "
+        "lines/sec: %5d, "
+        "tv200: %05d, tv404: %05d, "
+        "ep200: %05d, ep404: %05d",
+        total,
+        int(total / (time.time() - t0)),
+        len(tv200),
+        len(tv404),
+        len(ep200),
+        len(ep404)
+    )
 
-def read_known_tv_series_cache(path):
-    with open(path) as f:
-        for line in f:
-            torrent = ""
+    if args.log_dir:
+        dir_path = "%s/%s-%s" % (
+            args.log_dir.rstrip(),
+            datetime.datetime.utcnow().isoformat(),
+            total
+        )
+
+        try:
+            os.makedirs(dir_path)
+        except FileExistsError:
+            raise
+
+        def write_with_freq(name, counter):
+            with open(os.path.join(dir_path, "%s.txt" % name), "w+") as csv_path:
+                writer = csv.writer(csv_path, delimiter="|")
+                for row in sorted(counter.items(), key=lambda x: x[1], reverse=True):
+                    writer.writerow(row[::-1])
+
+        if ep200:
+            write_with_freq("ep200", ep200)
+        if ep404:
+            write_with_freq("ep404", ep404)
+        if tv200:
+            write_with_freq("tv200", tv200)
+        if tv404:
+            write_with_freq("tv404", tv404)
 
 
 def main():
@@ -160,6 +211,9 @@ def main():
         if args.train_mode:
             logger.debug("Enable train mode")
             parser_class = MaskTrainParser
+
+        if args.log_dir:
+            logger.debug("Enable statistics logging into %s", args.log_dir)
 
         parser = parser_class(
             train_mode=args.train_mode,
@@ -179,23 +233,14 @@ def main():
 
         tv_series = read_imdb_tv_series(parser)
         tv_episodes = read_imdb_tv_episodes(parser)
-        found_tv_series = 0
 
-        cache_path = "/tmp/torrents.json"
-        if not os.path.exists(cache_path):
-            t0 = time.time()
-            with open(cache_path, "w+") as f:
-                for torrent in parse_torrents(parser, tv_series, tv_episodes):
-                    f.write("{}\n".format(json.dumps(torrent)))
-                    found_tv_series += 1
+        output = args.output_file
+        t0 = time.time()
 
-                    if not found_tv_series % 1000:
-                        logger.debug("TVSeries torrents found: %s",
-                                     found_tv_series)
+        for torrent in parse_torrents(args, parser, tv_series, tv_episodes):
+            output.write("{}\n".format(json.dumps(torrent)))
 
-                        # if not found_tv_series % 1000:
-                        #    break
-            logger.debug("Complete in %0.2f", time.time() - t0)
+        logger.debug("Complete in %0.2f", time.time() - t0)
 
         if args.train_mode:
             parser.update_stats()

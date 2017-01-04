@@ -18,7 +18,7 @@ wc -l imdb_movies.csv;
 
 
 wc -l torrents.csv;
-time ssh -C sys_1 "$CMD_PREFIX (select distinct on (torrent_id, title) torrent_id, title from torrents_pubs) $CMD_SUFFIX" | sort > torrents.csv;
+time ssh -C sys_1 "$CMD_PREFIX (select distinct on (torrent_id, title) torrent_id, title from torrents_pubs) $CMD_SUFFIX" | grep "|" | sort -u > torrents.csv;
 wc -l torrents.csv;
 
 

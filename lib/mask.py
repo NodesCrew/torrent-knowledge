@@ -6,6 +6,7 @@ import collections
 
 from functools import lru_cache
 
+
 def jsonify(obj):
     if isinstance(obj, (set,)):
         return list(sorted(obj))
