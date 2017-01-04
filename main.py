@@ -6,10 +6,13 @@ import csv
 import sys
 import time
 import json
+import collections
 from lib.log import logger
 from lib.cli import parse_args
 from lib.mask import MaskParser
 from lib.mask import MaskTrainParser
+
+csv.field_size_limit(sys.maxsize)
 
 
 EPISODE_PSEUDO_ID = "{series_id}-{season_no:02d}-{episode_no:02d}"
@@ -73,14 +76,15 @@ def parse_torrents(parser, tv_series, tv_episodes):
 
     total = 0
     tv200 = 0
-    tv404 = 0
-    ep404 = 0
+    tv404 = collections.Counter()
     ep200 = 0
+    ep404 = collections.Counter()
     success_ids = set()
 
     with open(csv_path) as csv_file:
         reader = csv.reader(csv_file, delimiter="|")
         next(reader)
+
         for line in reader:
             total += 1
             if not total % 5000:
@@ -88,7 +92,7 @@ def parse_torrents(parser, tv_series, tv_episodes):
                     "Read Lines per second: %d, "
                     "tv200: %05d, tv404: %05d, "
                     "ep200: %05d, ep404: %05d",
-                    total / (time.time() - t0), tv200, tv404, ep200, ep404)
+                    total / (time.time() - t0), tv200, len(tv404), ep200, len(ep404))
 
             try:
                 torrent_id, torrent_title = line
@@ -110,7 +114,7 @@ def parse_torrents(parser, tv_series, tv_episodes):
                 assert torrent
                 assert "series_name" in torrent
                 if torrent["series_name"] not in tv_series:
-                    tv404 += 1
+                    tv404[torrent["series_name"]] += 1
                     continue
                 tv200 += 1
 
@@ -123,7 +127,7 @@ def parse_torrents(parser, tv_series, tv_episodes):
                 )
 
                 if pseudo_id not in tv_episodes:
-                    ep404 += 1
+                    ep404[pseudo_id] += 1
                     continue
                 ep200 += 1
 

@@ -19,21 +19,22 @@ optional arguments:
 user@mbpro$ wc -l settings/torrents_masks.json
      121 settings/torrents_masks.json
 
-user@mbpro$ wc -l datasets/torrents_titles.csv
- 6596398 datasets/torrents_titles.csv
+user@mbpro$ wc -l datasets/torrents.csv
+ 6808916 datasets/torrents.csv
 
 user@mbpro$ ./main.py -vvv -t
  ...
-[log] root - DEBUG - Read Lines per second: 6664.7008
-[log] root - DEBUG - Complete in 2032.46
+[log] root - DEBUG - Read Lines per second: 6090.1864
+[log] root - DEBUG - Complete in 1745.80
+
 
 user@mbpro$ wc -l /tmp/torrents.json
   165976 /tmp/torrents.json
 
 user@mbpro$ ./main.py -vvv
 ...
-[log] root - DEBUG - Read Lines per second: 46981.7985
-[log] root - DEBUG - Complete in 288.36
+[log] root - DEBUG - Read Lines per second: 42184.1250
+[log] root - root - DEBUG - Complete in 252.09
 
 user@mbpro$ wc -l /tmp/torrents.json
   161551 /tmp/torrents.json

@@ -20,3 +20,28 @@ wc -l imdb_movies.csv;
 wc -l torrents.csv;
 time ssh -C sys_1 "$CMD_PREFIX (select distinct on (torrent_id, title) torrent_id, title from torrents_pubs) $CMD_SUFFIX" | sort > torrents.csv;
 wc -l torrents.csv;
+
+
+# root@ns535588:/home/workers/bth-server/data/imdbpie# find title_plots/ -iname "*.json" | wc -l
+# 749146
+
+# Sun Jan  1 19:31:14 UTC 2017
+# 750008
+
+# Sun Jan  1 21:32:51 UTC 2017
+# 752044
+
+# Sun Jan  1 22:54:08 UTC 2017
+# 753730
+
+# Mon Jan  2 07:16:21 UTC 2017
+# 766990
+
+# Mon Jan  2 09:44:50 UTC 2017
+# 770963
+
+# Mon Jan  2 12:34:53 UTC 2017
+# 775427
+
+# Mon Jan  2 22:45:55 UTC 2017
+# 795275
