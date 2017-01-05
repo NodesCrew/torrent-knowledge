@@ -188,7 +188,7 @@ class MaskParser(object):
             for value, info in
             sorted(values.items(),
                    key=lambda x: x[1].get("freq") or 0,
-                     reverse=True)
+                   reverse=True)
             if (info.get("freq") or 0) > 0
         })
         return "(?P<{name}>{choices})".format(

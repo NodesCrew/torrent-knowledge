@@ -133,8 +133,8 @@ def parse_torrents(args, parser, tv_series, tv_episodes):
                 len(ep200),
                 len(ep404)
             )
-            # if not total % 100000:
-            #     break
+            if not total % 100000:
+                break
 
         try:
             torrent_id, torrent_title = line
