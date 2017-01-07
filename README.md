@@ -35,26 +35,30 @@ user@mbpro$ wc -l settings/torrents_masks.json
 user@mbpro$ wc -l datasets/torrents.csv
  6808916 datasets/torrents.csv
 
-user@mbpro$ ./main.py -vvv -t -i datasets/torrents.csv -o /tmp/torrents.json -l /tmp/kn
- ...
-[log] root - DEBUG - Read Lines per second: 6224.1321
-[log] root - DEBUG - Complete in 1708.44
+user@mbpro$ ./main.py -vvv -t -i datasets/torrents.csv -o /tmp/torrents.json -l /tmp/log
+log - root - DEBUG - Complete:  5294016, lines/sec: 11089, tv200: 02881, tv404: 04932, ep200: 38679, ep404: 05564
+log - root - DEBUG - Complete in 477.60
+user@mbpro$ wc -l /tmp/torrents.json
+  199731 /tmp/torrents.json
 
+user@mbpro$ ./main.py -vvv -i datasets/torrents.csv -o /tmp/torrents.json -l /tmp/log
+log - root - DEBUG - Complete:  5294016, lines/sec: 14514, tv200: 02620, tv404: 03385, ep200: 38142, ep404: 05494
+log - root - DEBUG - Complete in 364.95
 
 user@mbpro$ wc -l /tmp/torrents.json
-  165976 /tmp/torrents.json
-
-user@mbpro$ ./main.py -vvv
-...
-[log] root - DEBUG - Read Lines per second: 42184.1250
-[log] root - root - DEBUG - Complete in 252.09
-
-user@mbpro$ wc -l /tmp/torrents.json
-  161551 /tmp/torrents.json
+  192036 /tmp/torrents.json
 
 user@mbpro$ wc -l settings/torrents_masks.json
-   18666 settings/torrents_masks.json
+   14946 settings/torrents_masks.json
 </pre>
+
+Untrained mode cons:
+
+- less accurate results (~4%)
+
+Untrained mode pros:
+
+- faster batch processing (~30% speedup)
 
 
 ### Masks file
